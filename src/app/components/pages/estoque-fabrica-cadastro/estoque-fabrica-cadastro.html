@@ -1,0 +1,70 @@
+<div class="estoque-cadastro-container">
+
+  <div class="mb-4">
+    <h2 class="page-title">{{ estoqueEmEdicaoId ? 'Editar Estoque' : 'Adicionar Estoque à Fábrica' }}</h2>
+    <p class="text-muted">
+      {{ estoqueEmEdicaoId ? 'Atualize as informações do estoque.' : 'Vincule um produto ao estoque da fábrica.' }}
+    </p>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="mensagemErro">
+    {{ mensagemErro }}
+  </div>
+
+  <form [formGroup]="formEstoque" (ngSubmit)="salvar()">
+    <div class="card mb-4">
+      <div class="card-body">
+
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label class="form-label">Produto *</label>
+            <select class="form-select" formControlName="produtoId">
+              <option value="">Selecionar produto</option>
+              <option *ngFor="let p of produtos()" [value]="p.id">{{ p.produtoNome }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Localização</label>
+            <input type="text" class="form-control" formControlName="localizacao"
+              placeholder="Ex: Prateleira A3">
+          </div>
+
+          <div class="col-md-4" *ngIf="!estoqueEmEdicaoId">
+            <label class="form-label">Quantidade Inicial</label>
+            <input type="number" class="form-control" formControlName="quantidadeDisponivel">
+            <div class="form-text">Normalmente começa em 0. A quantidade real chega via produção com lote ou pela tela de Estoque.</div>
+          </div>
+
+          <div class="col-md-4" *ngIf="estoqueEmEdicaoId">
+            <label class="form-label">Quantidade Disponível</label>
+            <input type="text" class="form-control" [value]="formEstoque.get('quantidadeDisponivel')?.value" disabled>
+            <div class="form-text">Quantidade só é alterada por movimentações de estoque.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Quantidade Mínima</label>
+            <input type="number" class="form-control" formControlName="quantidadeMinima">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Quantidade Máxima</label>
+            <input type="number" class="form-control" formControlName="quantidadeMaxima">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end mb-4">
+      <button type="submit" class="btn btn-success">
+        {{ estoqueEmEdicaoId ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+
+</div>

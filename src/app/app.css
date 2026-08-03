@@ -1,0 +1,34 @@
+.layout{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
+
+.corpo{
+    flex:1;
+    display:flex;
+    overflow:hidden;
+}
+
+.content{
+    flex:1;
+    overflow:auto;
+    padding:30px;
+    background:#f4f5f7;
+}
+
+.content > * {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+}
+.estoque-container,
+.produto-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}

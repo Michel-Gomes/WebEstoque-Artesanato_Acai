@@ -1,0 +1,135 @@
+.estoque-container {
+  padding: 0;
+  background: transparent;
+}
+
+.header-estoque {
+  background: #fff;
+  border-radius: 14px;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-left: 6px solid #7b2cbf;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
+}
+
+.page-title {
+  font-size: 1.7rem;
+  color: #3c096c;
+  font-weight: 700;
+  margin: 0;
+}
+
+.card-filtro,
+.card-tabela {
+  border: none;
+  border-radius: 14px;
+  margin-bottom: 22px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 22px;
+}
+
+.card-tabela .card-body {
+  padding: 0;
+}
+
+.card-title {
+  margin: 0 0 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #3c096c;
+}
+
+.form-select {
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+  transition: .3s;
+}
+
+.form-select:focus {
+  border-color: #7b2cbf;
+  box-shadow: 0 0 10px rgba(123, 44, 191, .15);
+}
+
+.btn-roxo {
+  background: #7b2cbf;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: .3s;
+}
+
+.btn-roxo:hover {
+  background: #5a189a;
+  color: #fff;
+}
+
+.btn-cancelar {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  color: #6c757d;
+  border-radius: 10px;
+  font-weight: 600;
+  height: 48px;
+  transition: .3s;
+}
+
+.btn-cancelar:hover {
+  background: #f4f4f4;
+}
+
+.thead-roxo {
+  background: #f4effc;
+}
+
+.thead-roxo th {
+  color: #5a189a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  border-bottom: 2px solid #e4d4f7;
+  padding: 16px 14px;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 14px;
+  vertical-align: middle;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.badge-verde { background: #d1f7dd; color: #147a3f; }
+.badge-vermelho { background: #fbdada; color: #b3261e; }
+.badge-azul { background: #d6e9ff; color: #1258a5; }
+.badge-laranja { background: #ffe6c9; color: #b3620b; }
+.badge-cinza { background: #e5e5eb; color: #4a4a5a; }
+
+.origem-fabrica {
+  color: #1258a5;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .header-estoque {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 16px;
+  }
+}

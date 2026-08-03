@@ -1,0 +1,64 @@
+<div class="historico-container">
+
+  <div class="mb-4">
+    <a routerLink="/produtos" class="link-voltar">
+      <i class="bi bi-arrow-left me-1"></i> Voltar para Produtos
+    </a>
+    <h2 class="page-title mt-2">Histórico de Movimentação</h2>
+    <p class="text-muted" *ngIf="produtoNome()">{{ produtoNome() }}</p>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="mensagemErro()">
+    {{ mensagemErro() }}
+  </div>
+
+  <div class="text-center py-5" *ngIf="carregando()">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div class="card" *ngIf="!carregando()">
+    <div class="card-body">
+
+      <div class="timeline" *ngIf="timeline().length > 0; else semMovimentacao">
+        <div class="timeline-item" *ngFor="let mov of timeline()">
+
+          <div class="timeline-marcador"></div>
+
+          <div class="timeline-conteudo">
+            <div class="timeline-topo">
+              <span class="badge" [ngClass]="classeBadge(mov.tipoMovimentacao)">
+                {{ mov.tipoMovimentacao }}
+              </span>
+              <span class="timeline-origem">{{ mov.origem }}</span>
+              <span class="timeline-data">
+                {{ mov.dataMovimentacao | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+
+            <div class="timeline-detalhes">
+              <strong>{{ mov.quantidade }} {{ mov.unidadeMedida }}</strong>
+              <span *ngIf="mov.codigoLote"> — Lote: {{ mov.codigoLote }}</span>
+            </div>
+
+            <p class="timeline-observacao" *ngIf="mov.observacao">
+              {{ mov.observacao }}
+            </p>
+
+            <div class="timeline-usuario">
+              <i class="bi bi-person-fill me-1"></i>{{ mov.usuarioNome }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <ng-template #semMovimentacao>
+        <p class="text-muted mb-0 text-center py-4">
+          Nenhuma movimentação registrada para este produto.
+        </p>
+      </ng-template>
+
+    </div>
+  </div>
+
+</div>

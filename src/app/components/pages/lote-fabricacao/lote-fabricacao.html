@@ -1,0 +1,80 @@
+<div class="container-fluid lote-fabricacao-container">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 header-lote">
+    <h4 class="title-page">
+      🏷️ LOTE FABRICAÇÃO
+    </h4>
+
+    <a routerLink="/lote-fabricacao/cadastro" class="btn btn-success btn-add">
+      ➕ Novo Lote
+    </a>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="mensagemErro()">
+    {{ mensagemErro() }}
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-3 filtros-bar">
+    <div class="input-group w-50">
+      <span class="input-group-text">🔍</span>
+      <input type="text" class="form-control" placeholder="Buscar produto ou código do lote..."
+        [ngModel]="termoBusca()" (ngModelChange)="filtrar($event)">
+    </div>
+  </div>
+
+  <div class="text-center py-5" *ngIf="carregando()">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div class="card card-tabela" *ngIf="!carregando()">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>PRODUTO</th>
+            <th>CÓDIGO LOTE</th>
+            <th class="text-center">FABRICADA</th>
+            <th class="text-center">DISPONÍVEL</th>
+            <th>FABRICAÇÃO</th>
+            <th>VALIDADE</th>
+            <th class="text-center">AÇÕES</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let lote of lotesFiltrados()">
+            <td>{{ lote.produtoNome }}</td>
+            <td>{{ lote.codigoLote }}</td>
+            <td class="text-center">{{ lote.quantidadeFabricada }}</td>
+            <td class="text-center">{{ lote.quantidadeDisponivel }}</td>
+            <td>{{ lote.dataFabricacao | date: 'dd/MM/yyyy' }}</td>
+            <td>
+              <span [ngClass]="{
+                'texto-vencido': statusValidade(lote) === 'vencido',
+                'texto-proximo': statusValidade(lote) === 'proximo'
+              }">
+                {{ lote.dataValidade | date: 'dd/MM/yyyy' }}
+                <span *ngIf="statusValidade(lote) === 'vencido'"> ⚠️ Vencido</span>
+                <span *ngIf="statusValidade(lote) === 'proximo'"> ⏰ Próx. vencimento</span>
+              </span>
+            </td>
+            <td class="text-center acoes">
+              <a [routerLink]="['/produto/historico', lote.produtoId]"
+                [queryParams]="{ nome: lote.produtoNome }" title="Histórico do produto">👁️</a>
+              &nbsp;
+              <a [routerLink]="['/lote-fabricacao/editar', lote.id]" title="Editar">✏️</a>
+            </td>
+          </tr>
+
+          <tr *ngIf="lotesFiltrados().length === 0">
+            <td colspan="7" class="text-center text-muted py-4">
+              Nenhum lote de fabricação encontrado.
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

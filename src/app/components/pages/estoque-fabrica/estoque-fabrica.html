@@ -1,0 +1,215 @@
+<div class="estoque-container">
+
+  <!-- HEADER DA PÁGINA -->
+  <div class="d-flex justify-content-between align-items-center mb-4 header-estoque">
+    <div>
+      <h2 class="page-title">Estoque Fábrica</h2>
+      <p class="text-muted mb-0">Consulte, movimente e gerencie o estoque da fábrica.</p>
+    </div>
+
+    <a routerLink="/estoque-fabrica/cadastro" class="btn btn-roxo">
+      <i class="bi bi-plus-circle-fill me-1"></i> Novo Item no Estoque
+    </a>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="mensagemErro()">{{ mensagemErro() }}</div>
+  <div class="alert alert-success" *ngIf="mensagemSucesso()">{{ mensagemSucesso() }}</div>
+
+  <!-- BUSCA -->
+  <div class="card card-filtro mb-4">
+    <div class="card-body">
+      <h5 class="card-title">
+        <i class="bi bi-search me-2"></i>Buscar
+      </h5>
+
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" placeholder="Buscar por nome do produto..."
+          [ngModel]="termoBusca()" (ngModelChange)="filtrar($event)">
+      </div>
+    </div>
+  </div>
+
+  <!-- TABELA DE ESTOQUE -->
+  <div class="card card-tabela">
+    <div class="card-body p-0">
+
+      <div class="text-center py-5" *ngIf="carregando()">
+        <div class="spinner-border" role="status" style="color: #7b2cbf;"></div>
+      </div>
+
+      <div class="table-responsive" *ngIf="!carregando()">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="thead-roxo">
+            <tr>
+              <th>Produto</th>
+              <th>Categoria</th>
+              <th>Fornecedor</th>
+              <th class="text-end">Custo Unit.</th>
+              <th class="text-center">Qtd</th>
+              <th class="text-center">Mín / Máx</th>
+              <th>Lote (próx. venc.)</th>
+              <th class="text-center" style="width: 18%;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <ng-container *ngFor="let item of itensFiltrados()">
+              <tr>
+                <td>
+                  <strong>{{ item.produtoNome }}</strong>
+                  <div class="status" [ngClass]="statusEstoque(item) === 'baixo' ? 'status-baixo' : 'status-normal'">
+                    <i class="bi" [ngClass]="statusEstoque(item) === 'baixo' ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill'"></i>
+                    {{ statusEstoque(item) === 'baixo' ? 'Abaixo do mínimo' : 'Normal' }}
+                  </div>
+                </td>
+                <td>{{ detalhesProduto(item)?.categoria || '-' }}</td>
+                <td>{{ detalhesProduto(item)?.fornecedor || '-' }}</td>
+                <td class="text-end">{{ detalhesProduto(item)?.precoCusto | currency:'BRL' }}</td>
+                <td class="text-center"><strong>{{ item.quantidadeDisponivel }}</strong></td>
+                <td class="text-center">{{ item.quantidadeMinima }} / {{ item.quantidadeMaxima }}</td>
+                <td>
+                  <ng-container *ngIf="loteResumo(item) as lote; else semLote">
+                    <span class="badge-lote" [ngClass]="{
+                      'lote-vencido': statusValidadeLote(lote) === 'vencido',
+                      'lote-proximo': statusValidadeLote(lote) === 'proximo'
+                    }">
+                      {{ lote.codigoLote }} — vence {{ lote.dataValidade | date: 'dd/MM/yyyy' }}
+                    </span>
+                  </ng-container>
+                  <ng-template #semLote>
+                    <span class="text-muted">-</span>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <div class="acoes">
+                    <button class="btn-icone" (click)="abrirAdicionarQuantidade(item)" title="Adicionar via lote">
+                      <i class="bi bi-plus-circle"></i>
+                    </button>
+                    <button class="btn-icone" (click)="abrirRetirarQuantidade(item)" title="Retirar quantidade">
+                      <i class="bi bi-dash-circle"></i>
+                    </button>
+                    <button class="btn-icone" (click)="abrirTransferencia(item)" title="Transferir para Loja">
+                      <i class="bi bi-arrow-right-circle"></i>
+                    </button>
+                    <a [routerLink]="['/produto/historico', item.produtoId]"
+                      [queryParams]="{ nome: item.produtoNome }" title="Histórico">
+                      <i class="bi bi-clock-history"></i>
+                    </a>
+                    <a [routerLink]="['/estoque-fabrica/editar', item.id]" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <button class="btn-icone" (click)="excluir(item)" title="Excluir">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- LINHA DE AÇÃO: ADICIONAR VIA LOTE -->
+              <tr *ngIf="itemEmAdicaoId() === item.id" class="linha-acao">
+                <td colspan="8">
+                  <div class="form-acao">
+                    <div class="campo-acao campo-acao-grande">
+                      <label>Lote de Fabricação *</label>
+                      <select class="form-select form-select-sm" [formControl]="loteEscolhidoId">
+                        <option value="">Selecionar lote</option>
+                        <option *ngFor="let lote of lotesDisponiveis(item)" [value]="lote.id">
+                          {{ lote.codigoLote }} — {{ lote.quantidadeFabricada }} un. — Fab: {{ lote.dataFabricacao | date:'dd/MM/yyyy' }} — Vence: {{ lote.dataValidade | date:'dd/MM/yyyy' }}
+                        </option>
+                      </select>
+                      <div class="text-muted small mt-1" *ngIf="lotesDisponiveis(item).length === 0">
+                        Nenhum lote com saldo disponível para este produto. Cadastre um em "Lote Fabricação".
+                      </div>
+                    </div>
+
+                    <div class="campo-acao" *ngIf="loteSelecionado(item) as loteSel">
+                      <label>Quantidade (do lote)</label>
+                      <input type="text" class="form-control form-control-sm" [value]="loteSel.quantidadeFabricada" disabled>
+                    </div>
+
+                    <div class="botoes-acao">
+                      <button class="btn btn-sm btn-confirmar" [disabled]="salvandoAdicao()"
+                        (click)="confirmarAdicionarQuantidade(item)">
+                        {{ salvandoAdicao() ? 'Salvando...' : 'Confirmar' }}
+                      </button>
+                      <button class="btn btn-sm btn-cancelar" (click)="cancelarAdicionarQuantidade()">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- LINHA DE AÇÃO: RETIRAR QUANTIDADE -->
+              <tr *ngIf="itemEmRetiradaId() === item.id" class="linha-acao linha-acao-retirada">
+                <td colspan="8">
+                  <div class="form-acao">
+                    <div class="campo-acao">
+                      <label>Quantidade a retirar * (disponível: {{ item.quantidadeDisponivel }})</label>
+                      <input type="number" class="form-control form-control-sm" [formControl]="quantidadeRetirar">
+                    </div>
+                    <div class="campo-acao campo-acao-grande">
+                      <label>Observação</label>
+                      <input type="text" class="form-control form-control-sm" [formControl]="observacaoRetirar"
+                        placeholder="Ex: perda, ajuste, etc.">
+                    </div>
+                    <div class="botoes-acao">
+                      <button class="btn btn-sm btn-retirar" [disabled]="salvandoRetirada()"
+                        (click)="confirmarRetirarQuantidade(item)">
+                        {{ salvandoRetirada() ? 'Salvando...' : 'Confirmar Retirada' }}
+                      </button>
+                      <button class="btn btn-sm btn-cancelar" (click)="cancelarRetirarQuantidade()">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- LINHA DE AÇÃO: TRANSFERIR PARA LOJA -->
+              <tr *ngIf="itemEmTransferenciaId() === item.id" class="linha-acao linha-acao-transferencia">
+                <td colspan="8">
+                  <div class="form-acao">
+                    <div class="campo-acao">
+                      <label>Lote (opcional)</label>
+                      <select class="form-select form-select-sm" [formControl]="loteTransferenciaId">
+                        <option value="">Sem lote específico</option>
+                        <option *ngFor="let lote of lotesDisponiveis(item)" [value]="lote.id">
+                          {{ lote.codigoLote }} — Disp: {{ lote.quantidadeDisponivel }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="campo-acao">
+                      <label>Quantidade * (disponível: {{ item.quantidadeDisponivel }})</label>
+                      <input type="number" class="form-control form-control-sm" [formControl]="quantidadeTransferir">
+                    </div>
+                    <div class="botoes-acao">
+                      <button class="btn btn-sm btn-transferir" [disabled]="salvandoTransferencia()"
+                        (click)="confirmarTransferencia(item)">
+                        {{ salvandoTransferencia() ? 'Enviando...' : 'Confirmar Transferência' }}
+                      </button>
+                      <button class="btn btn-sm btn-cancelar" (click)="cancelarTransferencia()">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+
+            <tr *ngIf="itensFiltrados().length === 0">
+              <td colspan="8" class="text-center text-muted py-5">
+                <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                Nenhum item de estoque encontrado.
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>

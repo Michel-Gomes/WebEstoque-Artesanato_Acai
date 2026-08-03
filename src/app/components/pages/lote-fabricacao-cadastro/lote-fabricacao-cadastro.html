@@ -1,0 +1,68 @@
+<div class="lote-cadastro-container">
+
+  <div class="mb-4">
+    <h2 class="page-title">{{ loteEmEdicaoId ? 'Editar Lote' : 'Novo Lote de Fabricação' }}</h2>
+    <p class="text-muted">
+      {{ loteEmEdicaoId ? 'Atualize as informações do lote.' : 'Registre um novo lote produzido.' }}
+    </p>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="mensagemErro">
+    {{ mensagemErro }}
+  </div>
+
+  <form [formGroup]="formLote" (ngSubmit)="salvar()">
+    <div class="card mb-4">
+      <div class="card-body">
+
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label class="form-label">Produto *</label>
+            <select class="form-select" formControlName="produtoId">
+              <option value="">Selecionar produto</option>
+              <option *ngFor="let p of produtos()" [value]="p.id">{{ p.produtoNome }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Código do Lote *</label>
+            <input type="text" class="form-control" formControlName="codigoLote"
+              placeholder="Ex: LOTE-2026-001">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Quantidade Fabricada *</label>
+            <input type="number" class="form-control" formControlName="quantidadeFabricada">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Data de Fabricação *</label>
+            <input type="date" class="form-control" formControlName="dataFabricacao">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Data de Validade *</label>
+            <input type="date" class="form-control" formControlName="dataValidade">
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">Observação</label>
+            <input type="text" class="form-control" formControlName="observacao" placeholder="Opcional">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end mb-4">
+      <button type="submit" class="btn btn-success">
+        {{ loteEmEdicaoId ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+
+</div>

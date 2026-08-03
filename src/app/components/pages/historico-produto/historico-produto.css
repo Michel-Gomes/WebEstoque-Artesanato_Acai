@@ -1,0 +1,114 @@
+.historico-container {
+  padding: 20px;
+}
+
+.link-voltar {
+  color: #8d93ab;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.link-voltar:hover {
+  color: #7b2cbf;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: #e0e0e8;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marcador {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+
+  background: #7b2cbf;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #e0e0e8;
+}
+
+.timeline-topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  margin-bottom: 4px;
+}
+
+.timeline-origem {
+  font-size: 0.78rem;
+  color: #6b6b80;
+  font-weight: 600;
+}
+
+.timeline-data {
+  font-size: 0.78rem;
+  color: #9a9aab;
+  margin-left: auto;
+}
+
+.timeline-detalhes {
+  font-size: 0.95rem;
+  color: #2a2a3a;
+}
+
+.timeline-observacao {
+  font-size: 0.85rem;
+  color: #6b6b80;
+  margin: 4px 0 0;
+}
+
+.timeline-usuario {
+  font-size: 0.78rem;
+  color: #9a9aab;
+  margin-top: 6px;
+}
+
+.badge-verde {
+  background: #d1f7dd;
+  color: #147a3f;
+}
+
+.badge-vermelho {
+  background: #fbdada;
+  color: #b3261e;
+}
+
+.badge-azul {
+  background: #d6e9ff;
+  color: #1258a5;
+}
+
+.badge-laranja {
+  background: #ffe6c9;
+  color: #b3620b;
+}
+
+.badge-cinza {
+  background: #e5e5eb;
+  color: #4a4a5a;
+}

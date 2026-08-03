@@ -1,0 +1,135 @@
+<div class="produto-container">
+
+  <!-- HEADER DA PÁGINA -->
+  <div class="d-flex justify-content-between align-items-center mb-4 header-produto">
+    <div>
+      <h2 class="page-title">{{ produtoEmEdicaoId ? 'Editar Produto' : 'Cadastrar Produto' }}</h2>
+      <p class="text-muted">
+        {{ produtoEmEdicaoId ? 'Atualize as informações do produto.' : 'Preencha os dados para cadastrar um novo
+        produto.' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="mensagemErro">
+    {{ mensagemErro }}
+  </div>
+
+  <form [formGroup]="formProduto" (ngSubmit)="cadastrarProduto()">
+
+    <!-- SEÇÃO 1: INFORMAÇÕES BÁSICAS -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="bi bi-box-seam me-2"></i>Informações Básicas
+        </h5>
+
+        <div class="row g-3">
+
+          <div class="col-md-5">
+            <label class="form-label">Nome do Produto *</label>
+            <input type="text" class="form-control" formControlName="produtoNome" placeholder="Ex: Açaí Morango 500ml"
+              maxlength="100">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Código de Barras</label>
+            <input type="text" class="form-control" formControlName="codigoBarras" placeholder="Código de barras"
+              maxlength="50">
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Unidade *</label>
+            <select class="form-select" formControlName="unidadeMedida">
+              <option value="">Selecionar</option>
+              <option value="QUILOGRAMAS">QUILOGRAMAS</option>
+              <option value="GRAMAS">GRAMAS</option>
+              <option value="MILILITROS">MILILITROS</option>
+              <option value="LITROS">LITROS</option>
+              <option value="UNIDADES">UNIDADES</option>
+              <option value="CAIXAS">CAIXAS</option>
+              <option value="PACOTES">PACOTES</option>
+              <option value="METROS">METROS</option>
+              <option value="OUTROS">OUTROS</option>
+            </select>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Categoria *</label>
+            <select class="form-select" formControlName="categoria">
+              <option value="">Selecionar</option>
+              <option value="ACAI">ACAI</option>
+              <option value="SORVETE">SORVETE</option>
+              <option value="EMBALAGENS">EMBALAGENS</option>
+              <option value="ALIMENTOS">ALIMENTOS</option>
+              <option value="BEBIDAS">BEBIDAS</option>
+              <option value="HIGIENE">HIGIENE</option>
+              <option value="ELETRONICOS">ELETRONICOS</option>
+              <option value="VESTUARIOS">VESTUARIOS</option>
+              <option value="PAPELARIA">PAPELARIA</option>
+              <option value="OUTROS">OUTROS</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Descrição</label>
+            <textarea class="form-control" rows="2" formControlName="descricao" placeholder="Descrição do produto"
+              maxlength="500"></textarea>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2: CUSTO, FORNECEDOR & VALIDADE -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="bi bi-currency-dollar me-2"></i>Custo, Fornecedor &amp; Validade
+        </h5>
+
+        <div class="row g-3 align-items-end">
+
+          <div class="col-md-3">
+            <label class="form-label">Preço de Custo (R$) *</label>
+            <input type="number" step="0.01" class="form-control" formControlName="precoCusto"
+              placeholder="0,00">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Fornecedor</label>
+            <input type="text" class="form-control" formControlName="fornecedor" placeholder="Nome do fornecedor">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Data de Validade</label>
+            <input type="date" class="form-control" formControlName="dataValidade">
+          </div>
+
+          <div class="col-md-2">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="perecivel" formControlName="perecivel">
+              <label class="form-check-label" for="perecivel">
+                Perecível *
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="d-flex gap-2 justify-content-end mb-4">
+      <button type="submit" class="btn btn-success">
+        {{ produtoEmEdicaoId ? 'Atualizar' : 'Salvar' }}
+      </button>
+
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">
+        Cancelar
+      </button>
+    </div>
+
+  </form>
+
+</div>

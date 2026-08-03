@@ -1,0 +1,174 @@
+<div class="produto-container">
+
+  <!-- HEADER DA PÁGINA -->
+  <div class="d-flex justify-content-between align-items-center mb-4 header-produto">
+    <div>
+      <h2 class="page-title">Produtos Cadastrados</h2>
+      <p class="text-muted">
+        Consulte, busque e gerencie os produtos do sistema.
+      </p>
+    </div>
+    <a routerLink="/produto/cadastro" class="btn btn-novo-produto">
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Novo Produto</span>
+    </a>
+  </div>
+
+  <!-- FILTROS / BUSCA -->
+  <div class="card filtro-card">
+    <div class="card-body">
+      <h5 class="card-title">Buscar Produto</h5>
+      <div class="row g-3 align-items-end">
+
+        <div class="col-md-5">
+          <label class="form-label">Nome do Produto ou ID</label>
+          <input type="text" class="form-control" placeholder="Buscar por produto ou Id" [formControl]="termoBusca">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Categoria</label>
+          <select class="form-select" [formControl]="categoriaBusca">
+            <option value="">Selecionar categoria</option>
+            <option value="ACAI">ACAI</option>
+            <option value="SORVETE">SORVETE</option>
+            <option value="EMBALAGENS">EMBALAGENS</option>
+            <option value="ALIMENTOS">ALIMENTOS</option>
+            <option value="BEBIDAS">BEBIDAS</option>
+            <option value="HIGIENE">HIGIENE</option>
+            <option value="ELETRONICOS">ELETRONICOS</option>
+            <option value="VESTUARIOS">VESTUARIOS</option>
+            <option value="PAPELARIA">PAPELARIA</option>
+            <option value="OUTROS">OUTROS</option>
+          </select>
+        </div>
+
+        <div class="col-md-2 d-grid">
+          <button type="button" class="btn btn-roxo btn-novo-produto">
+            Buscar
+          </button>
+        </div>
+
+        <div class="col-md-2 d-grid">
+          <button type="button" class="btn btn-outline-secondary"
+            (click)="termoBusca.setValue(''); categoriaBusca.setValue('')">
+            Limpar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTA DE PRODUTOS -->
+  <div class="card">
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="card-title mb-0">Lista de Produtos Cadastrados</h5>
+
+        <div class="d-flex align-items-center gap-3">
+          <button type="button" class="btn btn-sm btn-outline-success" (click)="exportarCsv()">
+            <i class="bi bi-file-earmark-excel"></i> Exportar CSV
+          </button>
+
+          <div class="d-flex align-items-center gap-2">
+            <label class="form-label mb-0" style="font-size: 0.8rem;">Mostrar:</label>
+            <select class="form-select form-select-sm" style="width: auto;" [ngModel]="itensPorPagina()"
+              (ngModelChange)="mudarItensPorPagina($event)">
+              <option [value]="5">5</option>
+              <option [value]="10">10</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Id</th>
+              <th>Produto</th>
+              <th>Categoria</th>
+              <th>Preço de Custo</th>
+              <th>Cód de Barras</th>
+              <th>Fornecedor</th>
+              <th>Data de Validade</th>
+              <th>Usuário</th>
+              <th style="width: 10%;" class="text-center">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let p of produtosPaginados; let i = index">
+              <td>{{ numeroDoProduto(p.id) }}</td>
+
+              <td class="text-truncate" style="max-width: 280px;">
+                {{ p.produtoNome }}
+              </td>
+
+              <td>{{ p.categoria }}</td>
+
+               <td>{{ p.precoCusto | currency:'BRL' }}</td>
+
+              <td>{{ p.codigoBarras }}</td>
+
+              <td class="text-truncate" style="max-width: 200px;">
+                {{ p.fornecedor || '-' }}
+              </td>
+
+              <td>{{ p.dataValidade || '-' }}</td>
+
+              <td>{{ p.usuarioNome }}</td>
+
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/produto/historico', p.id]"
+                    [queryParams]="{ nome: p.produtoNome }" title="Ver histórico">
+                    <i class="bi bi-clock-history"></i>
+                    <span class="ms-1 d-none d-md-inline">Histórico</span>
+                  </a>
+
+                  <a class="btn btn-sm btn-outline-primary" [routerLink]="['/produto/editar', p.id]">
+                    <i class="bi bi-pencil"></i>
+                    <span class="ms-1 d-none d-md-inline">Editar</span>
+                  </a>
+
+                  <button class="btn btn-sm btn-outline-danger" (click)="excluirProduto(p)">
+                    <i class="bi bi-trash"></i>
+                    <span class="ms-1 d-none d-md-inline">Excluir</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="produtosPaginados.length === 0">
+              <td colspan="7" class="text-center text-muted py-3">
+                Nenhum produto encontrado.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="produtosFiltrados.length > 0">
+        <span class="text-muted" style="font-size: 0.85rem;">
+          Página {{ paginaAtual() }} de {{ totalPaginas }}
+        </span>
+
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="paginaAtual() === 1"
+            (click)="irParaPagina(paginaAtual() - 1)">
+            Anterior
+          </button>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="paginaAtual() === totalPaginas"
+            (click)="irParaPagina(paginaAtual() + 1)">
+            Próxima
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>

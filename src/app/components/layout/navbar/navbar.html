@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg">
+
+    <div class="container-fluid">
+
+        <a routerLink="/dashboard" class="navbar-logo-link d-flex align-items-center gap-2">
+            <img src="assets/logo_artesanato.png" alt="Logo Artesanato do Açaí" class="navbar-logo-img">
+        </a>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+
+            <div class="sino-wrapper">
+                <button class="btn-sino" (click)="alternarPainel()" title="Notificações">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge-sino" *ngIf="totalAlertas() > 0">{{ totalAlertas() }}</span>
+                </button>
+
+                <div class="painel-notificacoes" *ngIf="painelAberto()">
+
+                    <div class="painel-header">
+                        <span>Notificações</span>
+                        <span class="painel-contagem" *ngIf="totalAlertas() > 0">{{ totalAlertas() }}</span>
+                    </div>
+
+                    <div class="painel-lista" *ngIf="notificacoes().length > 0; else semNotificacao">
+                        <div class="painel-item" *ngFor="let n of notificacoes()">
+                            <i class="bi bi-exclamation-triangle-fill icone-alerta"></i>
+                            <div class="painel-item-texto">
+                                <strong>{{ n.produtoNome }}</strong>
+                                <span class="painel-item-detalhe">
+                                    {{ n.origem }} — {{ n.quantidadeDisponivel }} / mín. {{ n.quantidadeMinima }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #semNotificacao>
+                        <div class="painel-vazio">
+                            Nenhum alerta no momento.
+                        </div>
+                    </ng-template>
+
+                    <div class="painel-footer" *ngIf="notificacoes().length > 0">
+                        <button class="btn-ver-tudo" (click)="irParaAlertas()">
+                            Ver todos os alertas
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <button class="btn">
+                Michel
+            </button>
+
+        </div>
+
+    </div>
+
+</nav>

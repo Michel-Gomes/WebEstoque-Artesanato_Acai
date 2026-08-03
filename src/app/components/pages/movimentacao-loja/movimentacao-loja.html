@@ -1,0 +1,105 @@
+<div class="estoque-container">
+
+  <!-- HEADER DA PÁGINA -->
+  <div class="d-flex justify-content-between align-items-center mb-4 header-estoque">
+    <div>
+      <h2 class="page-title">Movimentação Loja</h2>
+      <p class="text-muted mb-0">Histórico de auditoria — entradas, saídas, ajustes e transferências recebidas.</p>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="card card-filtro mb-4">
+    <div class="card-body">
+      <h5 class="card-title">
+        <i class="bi bi-funnel me-2"></i>Filtrar
+      </h5>
+
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Produto</label>
+          <select class="form-select" [ngModel]="filtroProdutoIdSelecionado()"
+            (ngModelChange)="filtroProdutoIdSelecionado.set($event)">
+            <option value="">Todos os produtos</option>
+            <option *ngFor="let p of produtos()" [value]="p.id">{{ p.produtoNome }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Tipo de Movimentação</label>
+          <select class="form-select" [ngModel]="filtroTipoSelecionado()"
+            (ngModelChange)="filtroTipoSelecionado.set($event)">
+            <option value="">Todos os tipos</option>
+            <option *ngFor="let tipo of tiposMovimentacao" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <button type="button" class="btn btn-roxo w-100" (click)="buscar()">
+            <i class="bi bi-search me-1"></i>Buscar
+          </button>
+        </div>
+
+        <div class="col-md-2">
+          <button type="button" class="btn btn-cancelar w-100" (click)="limparFiltros()">
+            Limpar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABELA -->
+  <div class="card card-tabela">
+    <div class="card-body p-0">
+
+      <div class="text-center py-5" *ngIf="carregando()">
+        <div class="spinner-border" role="status" style="color: #7b2cbf;"></div>
+      </div>
+
+      <div class="table-responsive" *ngIf="!carregando()">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="thead-roxo">
+            <tr>
+              <th>Produto</th>
+              <th>Tipo</th>
+              <th class="text-center">Qtd</th>
+              <th>Origem</th>
+              <th>Data</th>
+              <th>Usuário</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mov of movimentacoesFiltradas()">
+              <td>{{ mov.produtoNome }}</td>
+              <td>
+                <span class="badge" [ngClass]="classeBadge(mov.tipoMovimentacao)">
+                  {{ mov.tipoMovimentacao }}
+                </span>
+              </td>
+              <td class="text-center"><strong>{{ mov.quantidade }}</strong></td>
+              <td>
+                <span *ngIf="mov.tipoMovimentacao === 'TRANSFERENCIA_RECEBIDA'" class="origem-fabrica">
+                  <i class="bi bi-building me-1"></i>Fábrica
+                  <span *ngIf="mov.codigoLote"> — {{ mov.codigoLote }}</span>
+                </span>
+                <span *ngIf="mov.tipoMovimentacao !== 'TRANSFERENCIA_RECEBIDA'" class="text-muted">-</span>
+              </td>
+              <td>{{ mov.dataMovimentacao | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ mov.usuarioNome }}</td>
+            </tr>
+
+            <tr *ngIf="movimentacoesFiltradas().length === 0">
+              <td colspan="6" class="text-center text-muted py-5">
+                <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                Nenhuma movimentação encontrada.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>

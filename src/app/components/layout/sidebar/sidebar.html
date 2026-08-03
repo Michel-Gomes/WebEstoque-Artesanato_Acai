@@ -1,0 +1,115 @@
+<nav class="sidebar" [class.colapsada]="colapsada()">
+
+    <button class="botao-recolher" (click)="alternar()">
+        <i class="bi" [ngClass]="colapsada() ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+    </button>
+
+    <!-- DASHBOARD FIXO NO TOPO -->
+    <ul class="menu menu-topo">
+        <li>
+            <a routerLink="dashboard" routerLinkActive="active">
+                <i class="bi bi-speedometer2"></i>
+                <span class="texto-menu">Dashboard</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- ÁREA COM SCROLL -->
+    <div class="menu-scroll">
+        <ul class="menu">
+
+            <!-- GRUPO: CADASTROS -->
+            <span class="menu-title" (click)="alternarGrupo('cadastros')">
+                <span class="texto-menu">CADASTROS</span>
+                <i class="bi bi-chevron-down seta-grupo texto-menu" [class.rotacionada]="!grupoEstaAberto('cadastros')"></i>
+            </span>
+
+            <ng-container *ngIf="colapsada() || grupoEstaAberto('cadastros')">
+                <li>
+                    <a routerLink="produtos" routerLinkActive="active">
+                        <i class="bi bi-box-seam"></i>
+                        <span class="texto-menu">Produtos Cadastrados</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a routerLink="produto/cadastro" routerLinkActive="active">
+                        <i class="bi bi-plus-square"></i>
+                        <span class="texto-menu">Cadastrar Produto</span>
+                    </a>
+                </li>
+            </ng-container>
+
+            <!-- GRUPO: ESTOQUE -->
+            <span class="menu-title" (click)="alternarGrupo('estoque')">
+                <span class="texto-menu">ESTOQUE</span>
+                <i class="bi bi-chevron-down seta-grupo texto-menu" [class.rotacionada]="!grupoEstaAberto('estoque')"></i>
+            </span>
+
+            <ng-container *ngIf="colapsada() || grupoEstaAberto('estoque')">
+                <li>
+                    <a routerLink="estoque-loja" routerLinkActive="active">
+                        <i class="bi bi-shop"></i>
+                        <span class="texto-menu">Estoque Loja</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a routerLink="estoque-fabrica" routerLinkActive="active">
+                        <i class="bi bi-building"></i>
+                        <span class="texto-menu">Estoque Fábrica</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a routerLink="lote-fabricacao" routerLinkActive="active">
+                        <i class="bi bi-tags"></i>
+                        <span class="texto-menu">Lote Fabricação</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a routerLink="alertas-estoque-minimo" routerLinkActive="active">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span class="texto-menu">Alertas Estoque Mínimo</span>
+                    </a>
+                </li>
+            </ng-container>
+
+            <!-- GRUPO: MOVIMENTAÇÕES -->
+            <span class="menu-title" (click)="alternarGrupo('movimentacoes')">
+                <span class="texto-menu">MOVIMENTAÇÕES</span>
+                <i class="bi bi-chevron-down seta-grupo texto-menu"
+                    [class.rotacionada]="!grupoEstaAberto('movimentacoes')"></i>
+            </span>
+
+            <ng-container *ngIf="colapsada() || grupoEstaAberto('movimentacoes')">
+                <li>
+                    <a routerLink="movimentacao-loja" routerLinkActive="active">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span class="texto-menu">Loja</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a routerLink="movimentacao-fabrica" routerLinkActive="active">
+                        <i class="bi bi-arrow-repeat"></i>
+                        <span class="texto-menu">Fábrica</span>
+                    </a>
+                </li>
+            </ng-container>
+
+        </ul>
+    </div>
+
+    <!-- CONFIGURAÇÕES FIXA EMBAIXO -->
+    <ul class="menu menu-rodape">
+        <li>
+            <a routerLink="configuracoes" routerLinkActive="active">
+                <i class="bi bi-gear"></i>
+                <span class="texto-menu">Configurações</span>
+            </a>
+        </li>
+    </ul>
+
+</nav>
