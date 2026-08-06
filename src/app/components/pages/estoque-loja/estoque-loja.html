@@ -24,8 +24,8 @@
 
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-search"></i></span>
-        <input type="text" class="form-control" placeholder="Buscar por nome do produto..."
-          [ngModel]="termoBusca()" (ngModelChange)="filtrar($event)">
+        <input type="text" class="form-control" placeholder="Buscar por nome do produto..." [ngModel]="termoBusca()"
+          (ngModelChange)="filtrar($event)">
       </div>
     </div>
   </div>
@@ -33,6 +33,20 @@
   <!-- TABELA DE ESTOQUE -->
   <div class="card card-tabela">
     <div class="card-body p-0">
+
+      <!-- BARRA DE CONTROLE: Mostrar -->
+      <div class="d-flex justify-content-end align-items-center px-3 pt-3 pb-2" *ngIf="!carregando()">
+        <div class="d-flex align-items-center gap-2 mostrar-controle">
+          <label class="form-label mb-0">MOSTRAR:</label>
+          <select class="form-select form-select-sm" [ngModel]="itensPorPagina()"
+            (ngModelChange)="mudarItensPorPagina($event)">
+            <option [value]="5">5</option>
+            <option [value]="10">10</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </div>
+      </div>
 
       <div class="text-center py-5" *ngIf="carregando()">
         <div class="spinner-border" role="status" style="color: #7b2cbf;"></div>
@@ -56,12 +70,13 @@
           </thead>
           <tbody>
 
-            <ng-container *ngFor="let item of itensFiltrados()">
+            <ng-container *ngFor="let item of itensPaginados()">
               <tr>
                 <td>
                   <strong>{{ item.produtoNome }}</strong>
                   <div class="status" [ngClass]="statusEstoque(item) === 'baixo' ? 'status-baixo' : 'status-normal'">
-                    <i class="bi" [ngClass]="statusEstoque(item) === 'baixo' ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill'"></i>
+                    <i class="bi"
+                      [ngClass]="statusEstoque(item) === 'baixo' ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill'"></i>
                     {{ statusEstoque(item) === 'baixo' ? 'Abaixo do mínimo' : 'Normal' }}
                   </div>
                 </td>
@@ -93,8 +108,8 @@
                     <button class="btn-icone" (click)="abrirRetirarQuantidade(item)" title="Retirar quantidade">
                       <i class="bi bi-dash-circle"></i>
                     </button>
-                    <a [routerLink]="['/produto/historico', item.produtoId]"
-                      [queryParams]="{ nome: item.produtoNome }" title="Histórico">
+                    <a [routerLink]="['/produto/historico', item.produtoId]" [queryParams]="{ nome: item.produtoNome }"
+                      title="Histórico">
                       <i class="bi bi-clock-history"></i>
                     </a>
                     <a [routerLink]="['/estoque-loja/editar', item.id]" title="Editar">
@@ -169,6 +184,21 @@
 
           </tbody>
         </table>
+      </div>
+
+      <!-- NAVEGAÇÃO DE PÁGINAS -->
+      <div class="d-flex justify-content-between align-items-center px-3 py-3"
+        *ngIf="!carregando() && itensFiltrados().length > 0">
+        <span class="texto-pagina">Página {{ paginaAtual() }} de {{ totalPaginas() }}</span>
+
+        <div class="d-flex gap-2">
+          <button class="btn-paginacao" [disabled]="paginaAtual() === 1" (click)="paginaAnterior()">
+            Anterior
+          </button>
+          <button class="btn-paginacao" [disabled]="paginaAtual() === totalPaginas()" (click)="paginaProxima()">
+            Próxima
+          </button>
+        </div>
       </div>
 
     </div>

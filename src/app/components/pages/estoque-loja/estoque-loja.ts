@@ -25,6 +25,20 @@ export class EstoqueLoja implements OnInit {
   termoBusca = signal('');
   itensFiltrados = signal<EstoqueLojaModel[]>([]);
 
+  // --- Paginação ---
+  paginaAtual = signal(1);
+  itensPorPagina = signal(5);
+
+  itensPaginados = computed(() => {
+    const inicio = (this.paginaAtual() - 1) * this.itensPorPagina();
+    const fim = inicio + this.itensPorPagina();
+    return this.itensFiltrados().slice(inicio, fim);
+  });
+
+  totalPaginas = computed(() =>
+    Math.max(1, Math.ceil(this.itensFiltrados().length / this.itensPorPagina()))
+  );
+
   // controla qual linha está em modo "adicionar quantidade"
   itemEmAdicaoId = signal<string | null>(null);
   quantidadeAdicionar = new FormControl('', [Validators.required, Validators.min(1)]);
@@ -94,12 +108,33 @@ export class EstoqueLoja implements OnInit {
 
     if (!termo) {
       this.itensFiltrados.set(this.itens());
-      return;
+    } else {
+      this.itensFiltrados.set(
+        this.itens().filter(item => item.produtoNome.toLowerCase().includes(termo))
+      );
     }
 
-    this.itensFiltrados.set(
-      this.itens().filter(item => item.produtoNome.toLowerCase().includes(termo))
-    );
+    this.paginaAtual.set(1);
+  }
+
+  // --- Paginação ---
+
+  mudarItensPorPagina(valor: number): void {
+    this.itensPorPagina.set(Number(valor));
+    this.paginaAtual.set(1);
+  }
+
+  irParaPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.totalPaginas()) return;
+    this.paginaAtual.set(pagina);
+  }
+
+  paginaAnterior(): void {
+    this.irParaPagina(this.paginaAtual() - 1);
+  }
+
+  paginaProxima(): void {
+    this.irParaPagina(this.paginaAtual() + 1);
   }
 
   // Dados extras do produto, buscados pelo produtoId (categoria, unidade, etc.)
