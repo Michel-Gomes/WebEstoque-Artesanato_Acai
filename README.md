@@ -1,59 +1,218 @@
-# WebEstoque
+# WebEstoque-Artesanato_Acai
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+## 🖥️ Frontend para gerenciamento de estoque
 
-## Development server
+O **WebEstoque-Artesanato_Acai** é uma aplicação web desenvolvida com **Angular 21 e TypeScript**, criada para fornecer uma interface de gerenciamento para uma solução de controle de estoque.
 
-To start a local development server, run:
+O frontend foi desenvolvido para consumir uma API REST responsável pelas operações de estoque, produtos, lotes e movimentações.
 
-```bash
-ng serve
+## 🏗️ Arquitetura da solução
+
+O frontend faz parte de uma solução composta por uma aplicação web e uma API backend:
+
+```text
+┌─────────────────────────────────┐
+│       WebEstoque                 │
+│       Angular 21                 │
+│       TypeScript                 │
+└───────────────┬─────────────────┘
+                │
+                │ HTTP / REST
+                ▼
+┌─────────────────────────────────┐
+│       ApiEstoque                 │
+│       Java 21                    │
+│       Spring Boot                │
+└───────────────┬─────────────────┘
+                │
+                ▼
+┌─────────────────────────────────┐
+│       PostgreSQL 16              │
+└─────────────────────────────────┘
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+O frontend e o backend são mantidos em repositórios separados, permitindo a evolução independente das aplicações.
 
-## Code scaffolding
+## 🛠️ Tecnologias utilizadas
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Frontend
 
-```bash
-ng generate component component-name
+* Angular 21.1
+* TypeScript 5.9
+* Angular Router
+* Angular Forms
+* RxJS
+* Bootstrap 5.3
+* Bootstrap Icons
+
+### Desenvolvimento e testes
+
+* Angular CLI 21.1
+* npm 11
+* Vitest
+* JSDOM
+* Prettier
+
+## 📦 Funcionalidades
+
+A aplicação frontend é utilizada como interface para o sistema de gerenciamento de estoque, permitindo a interação com os recursos disponibilizados pela API backend.
+
+A solução está relacionada aos seguintes processos:
+
+* Gerenciamento de produtos;
+* Controle de estoque;
+* Estoque de fábrica;
+* Estoque de loja;
+* Lotes de fabricação;
+* Movimentações de estoque;
+* Rastreabilidade de lotes.
+
+> As operações e regras de negócio são processadas pelo backend através da `ApiEstoque`.
+
+## 🔗 Integração com o Backend
+
+O frontend foi desenvolvido para consumir a API REST do projeto:
+
+**ApiEstoque-Artesanato_Acai**
+
+Repositório:
+
+https://github.com/Michel-Gomes/ApiEstoque-Artesanato_Acai
+
+A comunicação entre as aplicações ocorre através de requisições HTTP utilizando APIs REST.
+
+```text
+WebEstoque
+    │
+    │ HTTP / REST
+    ▼
+ApiEstoque
+    │
+    ▼
+PostgreSQL
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📁 Estrutura
 
-```bash
-ng generate --help
+O projeto utiliza a estrutura padrão de uma aplicação Angular, com separação dos recursos da aplicação dentro de `src`.
+
+```text
+WebEstoque-Artesanato_Acai/
+│
+├── public/
+│   └── assets/
+│
+├── src/
+│
+├── angular.json
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+└── README.md
 ```
 
-## Building
+## 🚀 Como executar
 
-To build the project run:
+### Pré-requisitos
 
-```bash
-ng build
-```
+Antes de executar o projeto, é necessário ter instalado:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+* Node.js
+* npm
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### 1. Clonar o projeto
 
 ```bash
-ng test
+git clone https://github.com/Michel-Gomes/WebEstoque-Artesanato_Acai.git
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Acessar a pasta:
 
 ```bash
-ng e2e
+cd WebEstoque-Artesanato_Acai
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 2. Instalar as dependências
 
-## Additional Resources
+```bash
+npm install
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 3. Executar a aplicação
+
+```bash
+npm start
+```
+
+A aplicação estará disponível em:
+
+```text
+http://localhost:4200
+```
+
+## 🧪 Testes
+
+O projeto possui configuração para execução de testes utilizando **Vitest**.
+
+Para executar os testes:
+
+```bash
+npm test
+```
+
+Os testes fazem parte da evolução da aplicação e podem ser ampliados conforme novas funcionalidades forem adicionadas.
+
+## 🔨 Build
+
+Para gerar a versão de produção:
+
+```bash
+npm run build
+```
+
+Também é possível utilizar o modo de desenvolvimento com recompilação automática:
+
+```bash
+npm run watch
+```
+
+## 🔄 Evolução do projeto
+
+O frontend faz parte de uma aplicação em evolução contínua, acompanhando as mudanças e novas funcionalidades implementadas na `ApiEstoque`.
+
+Entre as próximas evoluções estão:
+
+* Ampliação da cobertura de testes automatizados;
+* Evolução das funcionalidades de gerenciamento de estoque;
+* Integração com novas funcionalidades do backend;
+* Implementação futura de autenticação de usuários.
+
+## 🎯 Objetivos técnicos
+
+O projeto demonstra a aplicação prática de conceitos como:
+
+* Desenvolvimento de aplicações web com Angular;
+* TypeScript;
+* Componentização;
+* Consumo de APIs REST;
+* Formulários;
+* Roteamento;
+* Comunicação assíncrona com RxJS;
+* Interface utilizando Bootstrap;
+* Organização de uma aplicação frontend;
+* Testes automatizados com Vitest;
+* Integração entre frontend e backend.
+
+## 🔗 Projeto relacionado
+
+### Backend
+
+**ApiEstoque-Artesanato_Acai**
+
+API REST desenvolvida com Java 21 e Spring Boot para gerenciamento dos recursos de estoque.
+
+https://github.com/Michel-Gomes/ApiEstoque-Artesanato_Acai
+
+## 👨‍💻 Autor
+
+**Michel Gomes**
